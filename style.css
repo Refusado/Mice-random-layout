@@ -1,0 +1,43 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+:root {
+  --FUNDO: #6A7495;
+  
+  --PADRAO: #324650;
+  --NUVEM: #757F96;
+  --GELO: #89A7F5;
+  --LAVA: #D84801;
+  --TRAMPOLIM: #6D4E94;
+  --CHOCOLATE: #2E190C;
+  --AGUA: #648ea381;
+  --TEIA: #9BAABC;
+}
+html, body {
+  width: 100vw;
+  height: 100vh;
+}
+body {
+  background-color: #6A7495;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+main {
+  width: 800px;
+  display: flex;
+  flex-flow: column nowrap;
+}
+svg {
+  margin: 0;
+  padding: 0;
+}
+.s {
+  color: white;
+  width: 800px;
+  height: 200px;
+  background-color: #503528;
+  margin: 0;
+  border-radius: 2px;
+}
