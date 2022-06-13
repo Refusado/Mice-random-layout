@@ -14,19 +14,51 @@ $typeColors = array(
   "#324650","#89A7F5","#6D4E94","#D84801","#2E190C","#324650","#324650","#324650","#f3faf86b","#6d9fb85d","#324650","#E7F0F2","#324650","#324650","#00000000","#f3faf86b","#324650","#324650","#324650","#51A317"
 );
 
-$groundsNo = 8;
+$groundsNo = 3;
 $typeExceptions = array(
-  11, 12, 13, 14, 16, 17, 18
+  5, 7, 8, 11, 12, 13, 14, 15, 16, 17, 18,
 );
-for ($i=0; $i < $groundsNo; $i++) { 
+
+for ($i = 0; $i < $groundsNo; $i++) { 
   $groundWidth = $grounds[$i]['width'] = random_int(20, 400);
   $groundHeight = $grounds[$i]['height'] = random_int(20, 200);
 
   $groundOriginX = $grounds[$i]['originX'] = random_int(0, (800 - $grounds[$i]['width']));
-  $groundOriginY = $grounds[$i]['originY'] = random_int(0, (400 - $grounds[$i]['height']));
+  $groundEndX = $grounds[$i]['endX'] = $groundOriginX + $groundWidth;
   
-  $grounds[$i]['type'] = random_int(0, count($typeColors) - 1);
+  $groundOriginY = $grounds[$i]['originY'] = random_int(0, (400 - $grounds[$i]['height']));
+  $groundEndY = $grounds[$i]['endY'] = $groundOriginY + $groundHeight;
+  
+  if ($i > 0) {
+    for ($ii = 0; $ii < $i; $ii++) {
+      if (
+        $grounds[$i]['originX'] > $grounds[$ii]['originX'] &&
+        $grounds[$i]['originX'] < $grounds[$ii]['endX'] ||
+        $grounds[$i]['endX'] > $grounds[$ii]['originX'] &&
+        $grounds[$i]['originX'] < $grounds[$ii]['endX']
+        ) {
+        if (
+          $grounds[$i]['originY'] > $grounds[$ii]['originY'] &&
+          $grounds[$i]['originY'] < $grounds[$ii]['endY'] ||
+          $grounds[$i]['endY'] > $grounds[$ii]['originY'] &&
+          $grounds[$i]['originY'] < $grounds[$ii]['endY']
+          ) {
+            $groundWidth = $grounds[$i]['width'] = random_int(20, 400);
+            $groundHeight = $grounds[$i]['height'] = random_int(20, 200);
+            
+            $groundOriginX = $grounds[$i]['originX'] = random_int(0, (800 - $grounds[$i]['width']));
+            $groundEndX = $grounds[$i]['endX'] = $groundOriginX + $groundWidth;
+            
+            $groundOriginY = $grounds[$i]['originY'] = random_int(0, (400 - $grounds[$i]['height']));
+            $groundEndY = $grounds[$i]['endY'] = $groundOriginY + $groundHeight;
+            
+            $ii = -1;
+        }
+      }
+    };
+  }
 
+  $grounds[$i]['type'] = random_int(0, count($typeColors) - 1);
   if ($typeExceptions < $typeColors) {
     for ($ii = 0; $ii < count($typeExceptions); $ii++) { 
       if($grounds[$i]['type'] == $typeExceptions[$ii]) {
@@ -46,29 +78,17 @@ for ($i=0; $i < $groundsNo; $i++) {
 ?>
     <rect x="0" y="0" width="100%" height="22px" fill="#00000015"/>
   </svg>
-  <div class="s"></div>
+  <div class="s">
+
+<?php
+
+  echo "<pre>";
+  print_r($grounds);
+  echo "</pre>";
+
+?>
+
+  </div>
 </main>
 </body>
 </html>
-<!--
-0 Madeira
-1 Gelo
-2 Trampolim
-3 Lava
-4 Chocolate
-5 Terra
-6 Grama
-7 Areia
-8 Nuvem
-9  Água
-10 Pedra
-11 Grama com Neve
-12 Retângulo
-13 Circulo
-14 Invisível
-15 Teia de Aranha
-16 Madeira2
-17 Grama Laranja
-18 Grama Rosa
-19 Ácido
--->
