@@ -1,3 +1,33 @@
+<?php
+session_start();
+
+if (isset($_GET['grounds-number']) && $_GET['grounds-number'] != 0) {
+  $groundsNo = $_GET['grounds-number'];
+}
+$_SESSION['lastGroundsNo'] = $groundsNo = $_GET['grounds-number'] ?? $_SESSION['lastGroundsNo'] ?? 5;
+
+if (@$_GET['edited']) {
+  $typeToShow = array();
+  $typeExceptions = array();
+
+  for ($i = 0; $i < 20; $i++) {
+    array_push($typeToShow, $i);
+    if (isset($_GET['e-' . $i])) {
+      array_push($typeExceptions, $i);
+    }
+  }
+
+  $_SESSION['lastExceptions'] = $typeExceptions;
+  header('location: ./');
+
+} else {
+  $typeExceptions = $_SESSION['lastExceptions'] ??
+  array(
+    5, 7, 8, 11, 12, 13, 14, 15, 16, 17, 18,
+  );
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,11 +42,6 @@
 <?php
 $typeColors = array(
   "#324650","#89A7F5","#6D4E94","#D84801","#2E190C","#324650","#324650","#324650","#f3faf86b","#6d9fb85d","#324650","#E7F0F2","#324650","#324650","#00000000","#f3faf86b","#324650","#324650","#324650","#51A317"
-);
-
-$groundsNo = 3;
-$typeExceptions = array(
-  5, 7, 8, 11, 12, 13, 14, 15, 16, 17, 18,
 );
 
 for ($i = 0; $i < $groundsNo; $i++) { 
@@ -79,15 +104,42 @@ for ($i = 0; $i < $groundsNo; $i++) {
     <rect x="0" y="0" width="100%" height="22px" fill="#00000015"/>
   </svg>
   <div class="s">
+    <a href="./">Gerar</a>
+    <form action="" method="get">
+      <input type="hidden" name="edited" value="true">
+      <input type="submit" value="Enviar"><br>
 
-<?php
+      <?php
+      echo "
+      Quantidade de pisos a ser gerado
+      <input type='number' name='grounds-number' id='' value='$groundsNo' max='50'><br>
+      
+      Quais tipos não devem ser gerados
+      ";
 
-  echo "<pre>";
-  print_r($grounds);
-  echo "</pre>";
+      $groundTypes = array(
+        "Madeira","Gelo","Trampolim","Lava","Chocolate","Terra","Grama","Areia","Nuvem","Água","Pedra","Neve","Retângulo","Circulo","Invisível","Teia de Aranha","Madeira2","Grama Laranja","Grama Rosa","Ácido"
+      );
 
-?>
-
+      function verifyException($var){
+        global $typeExceptions;
+        if (!is_null($typeExceptions)){
+          foreach ($typeExceptions as $execption) {
+            if ($var == $execption){
+              return true;
+            }
+          }
+        }
+      }
+      for ($i = 0; $i < count($groundTypes); $i++) {
+        if (verifyException($i)) {
+          echo "<br><input checked type='checkbox' name='e-$i' id=''>{$groundTypes[$i]}";
+        } else {
+          echo "<br><input type='checkbox' name='e-$i' id=''>{$groundTypes[$i]}";
+        }
+      }
+      ?>
+    </form>
   </div>
 </main>
 </body>
