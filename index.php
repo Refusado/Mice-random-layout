@@ -1,3 +1,13 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Layout Generator - TFM maps</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <svg viewBox="0 0 800 400">
 <?php
 session_start();
 
@@ -26,20 +36,7 @@ if (@$_GET['edited']) {
     5, 7, 8, 11, 12, 13, 14, 15, 16, 17, 18,
   );
 }
-?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Layout Generator - TFM maps</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <main>
-    <svg viewBox="0 0 800 400">
-      <rect x="0" y="0" width="800" height="400" fill="#6A7495"/>
-<?php
 $typeColors = array(
   "#324650","#89A7F5","#6D4E94","#D84801","#2E190C","#324650","#324650","#324650","#f3faf86b","#6d9fb85d","#324650","#E7F0F2","#324650","#324650","#00000000","#f3faf86b","#324650","#324650","#324650","#51A317"
 );
@@ -104,21 +101,23 @@ for ($i = 0; $i < $groundsNo; $i++) {
     <rect x="0" y="0" width="100%" height="22px" fill="#00000015"/>
   </svg>
   <div class="s">
-    <a href="./">Gerar</a>
-    <form action="" method="get">
+    <div class="btns-container">
+      <a class="btn" id="generate" href="./">
+        <img src="./images/refresh-icon.svg" alt="Generate new layout">
+      </a>
+      <label class="btn" id="show-settings-btn" for="show-settings">
+        <img src="./images/settings-icon.svg" alt="Settings">
+      </label>
+    </div>
+    
+    <input type="checkbox" name="show-settings" id="show-settings">
+    <form id="map-settings" action="" method="get">
       <input type="hidden" name="edited" value="true">
-      <input type="submit" value="Enviar"><br>
+      <div class='types-container'>
 
       <?php
-      echo "
-      Quantidade de pisos a ser gerado
-      <input type='number' name='grounds-number' id='' value='$groundsNo' max='50'><br>
-      
-      Quais tipos não devem ser gerados
-      ";
-
       $groundTypes = array(
-        "Madeira","Gelo","Trampolim","Lava","Chocolate","Terra","Grama","Areia","Nuvem","Água","Pedra","Neve","Retângulo","Circulo","Invisível","Teia de Aranha","Madeira2","Grama Laranja","Grama Rosa","Ácido"
+        "Madeira","Gelo","Trampolim","Lava","Chocolate","Terra","Grama","Areia","Nuvem","Água","Pedra","Neve","Retângulo","Circulo","Invisível","Teia","Madeira II","Grama II","Grama III","Ácido"
       );
 
       function verifyException($var){
@@ -133,12 +132,55 @@ for ($i = 0; $i < $groundsNo; $i++) {
       }
       for ($i = 0; $i < count($groundTypes); $i++) {
         if (verifyException($i)) {
-          echo "<br><input checked type='checkbox' name='e-$i' id=''>{$groundTypes[$i]}";
+          echo "
+          <input type='checkbox' name='e-$i' id='e-$i' checked>
+          <label class='ground-btn' for='e-$i'>{$groundTypes[$i]}</label>
+          ";
         } else {
-          echo "<br><input type='checkbox' name='e-$i' id=''>{$groundTypes[$i]}";
+          echo "
+          <input type='checkbox' name='e-$i' id='e-$i'>
+          <label class='ground-btn' for='e-$i'>{$groundTypes[$i]}</label>
+          ";
         }
       }
       ?>
+      </div>
+
+      <div id="btns-on-settings">
+        <label class="btn" id="close-settings-btn" for="show-settings">
+          <img src="./images/back-icon.svg" alt="Close settings">
+        </label>
+
+        <div class='grounds-no-container'>
+          <p style="text-align: center;">Pisos</p>
+
+          <?php echo "
+          <input type='range' name='grounds-number' id='grounds-number' step='1' value='$groundsNo' min='1' max='10'>
+          
+          <div class='steps-line'>";
+          for ($i = 1; $i <= 10; $i++) { 
+            echo "
+            <span>|</span>
+            ";
+            if ($i == 10){
+              echo "</div>
+              <div class='steps-number'>";
+              for ($ii = 1; $ii <= 10; $ii++) { 
+                echo "<span>$ii</span>";
+                if ($ii == 10){
+                  echo "</div>";
+                }
+              } 
+            }
+          }
+          ?>
+
+        </div>
+        <input id="save-btn" type="submit" value="Salver configurações">
+        <label class="btn" id="close-settings-btn" for="save-btn">
+          <img src="./images/save-icon.svg" alt="Save settings">
+        </label>
+      </div>
     </form>
   </div>
 </main>
