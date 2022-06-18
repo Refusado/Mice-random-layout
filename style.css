@@ -20,16 +20,10 @@ main {
   display: flex;
   flex-flow: column nowrap;
 }
-svg {
-  border-left: 1px solid #0110181b;
-  border-right: 1px solid #0110181b;
+.map-container {
+  border: 1px solid #4e5775;
 }
-rect {
-  transition: 200ms;
-}
-rect:hover {
-  opacity: 0;
-}
+
 .s {
   color: #f7efecf5;
   width: 800px;
@@ -160,4 +154,7 @@ rect:hover {
   width: 0px;
   display: flex;
   justify-content: center;
+}
+.disclaimer {
+  display: none;
 }

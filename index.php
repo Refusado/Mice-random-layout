@@ -1,4 +1,8 @@
-<?php session_start() ?>
+<?php
+session_start();
+require_once('source/functions.php');
+require_once('source/set.php');
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -11,101 +15,11 @@
   <main>
     <svg viewBox="0 0 800 400">
     <?php
-function generateNewGround($id) {
-  global $grounds;
 
-  global $proportionMult;
-  global $positionMult;
 
-  global $groundWidth;
-  global $groundHeight;
-  
-  global $groundOriginX;
-  global $groundOriginY;
-
-  global $groundEndX;
-  global $groundEndY;
-
-  global $maxGroundWidth;
-  global $maxGroundHeight;
-
-  $groundWidth = $grounds[$id]['width'] =  gMult(10, $maxGroundWidth, $proportionMult);
-  $groundHeight = $grounds[$id]['height'] = gMult(10, $maxGroundHeight, $proportionMult);
-  
-  $groundOriginX = $grounds[$id]['originX'] = gMult(0, (800 - $grounds[$id]['width']), $positionMult);
-  $groundOriginY = $grounds[$id]['originY'] = gMult(0, (400 - $grounds[$id]['height']), $positionMult);
-  
-  $groundEndX = $grounds[$id]['endX'] = $groundOriginX + $groundWidth;
-  $groundEndY = $grounds[$id]['endY'] = $groundOriginY + $groundHeight;
-}
-
-function verifyException($var){
-  global $typeExceptions;
-  if (!is_null($typeExceptions)){
-    foreach ($typeExceptions as $execption) {
-      if ($var == $execption){
-        return true;
-      }
-    }
-  }
-}
-function verifyDisable($var){
-  global $typeDisable;
-  if (!is_null($typeDisable)){
-    foreach ($typeDisable as $disable) {
-      if ($var == $disable){
-        return true;
-      }
-    }
-  }
-}
-function gMult($min, $max, $m) {
-  $n = random_int($min, $max);
-  while (($n % $m) != 0) {
-      $n = random_int($min, $max);
-  }
-  return $n;
-}
-
-$typeDisable = array(13, 14);
-
-$typeColors = array(
-  "#324650","#89A7F5","#6D4E94","#D84801","#2E190C","#324650","#324650","#324650","#f3faf86b","#6d9fb85d","#324650","#E7F0F2","#324650","#324650","#00000000","#f3faf86b","#324650","#324650","#324650","#51A317"
-);
-
-$proportionMult = $positionMult = 80;
-// Múltiplos de 400 > 200, 100, 80, 50, 40, 25, 20, 16, 10, 8, 5, 4, 2, 1
-
-$maxGroundWidth = 400;
-$maxGroundHeight = 200;
-
-if (isset($_POST['grounds-number']) && $_POST['grounds-number'] != 0) {
-  $groundsNo = $_POST['grounds-number'];
-}
-$_SESSION['lastGroundsNo'] = $groundsNo = $_POST['grounds-number'] ?? $_SESSION['lastGroundsNo'] ?? 4;
-
-if (@$_POST['edited']) {
-  $typeToShow = array();
-  $typeExceptions = array();
-
-  for ($i = 0; $i < 20; $i++) {
-    array_push($typeToShow, $i);
-    if (isset($_POST['e-' . $i])) {
-      array_push($typeExceptions, $i);
-    }
-  }
-
-  $_SESSION['lastExceptions'] = $typeExceptions;
-} else {
-  $typeExceptions = $_SESSION['lastExceptions'] ??
-  array(
-    5, 7, 8, 11, 12, 13, 14, 15, 16, 17, 18,
-  );
-}
 
 for ($i = 0; $i < $groundsNo; $i++) { 
   generateNewGround($i);
-  
   if ($i > 0) {
     for ($ii = 0; $ii < $i; $ii++) {
       if (
@@ -129,27 +43,30 @@ for ($i = 0; $i < $groundsNo; $i++) {
 
   $grounds[$i]['type'] = random_int(0, count($typeColors) - 1);
   if (count($typeExceptions) < count($typeColors)) {
-    for ($ii = 0; $ii < count($typeExceptions); $ii++) { 
-      if ($grounds[$i]['type'] == $typeExceptions[$ii]) {
-        $grounds[$i]['type'] = random_int(0, count($typeColors) - 1);
-        $ii = -1;
-      }
+    generateGroundType($i);
 
-      for ($iii = 0; $iii < count($typeDisable); $iii++) { 
-        if ($grounds[$i]['type'] == $typeDisable[$iii]) {
-          $grounds[$i]['type'] = random_int(0, count($typeColors) - 1);
-          $ii = -1;
-        }
-      }
-    };
+    
     $groundColor = $typeColors[$grounds[$i]['type']];
 
-        echo "  <rect width='$groundWidth' height='$groundHeight' x='$groundOriginX' y='$groundOriginY' fill='$groundColor'/>
+    echo "  <rect width='$groundWidth' height='$groundHeight' x='$groundOriginX' y='$groundOriginY' fill='$groundColor'/>
     ";
   } else {
     break;
   }
 };
+
+echo "
+<svg class='grid' stroke='#d21a1a9f' stroke-width='.5'>";
+for ($i = 1; $i < 800 / $proportionMult; $i++) {
+  $p = $proportionMult * $i;
+  echo "<line x1='$p' x2='$p' y1='0' y2='400'/>";
+}
+for ($i = 1; $i < 400 / $proportionMult; $i++) {
+  $p = $proportionMult * $i;
+  echo "<line x1='0' x2='800' y1='$p' y2='$p'/>";
+}
+echo "
+</svg>";
 ?>
 </svg>
   <div class="s">
@@ -168,6 +85,7 @@ for ($i = 0; $i < $groundsNo; $i++) {
         <input type="hidden" name="edited" value="true">
         <div class='types-container'>
           <?php
+
           $groundTypes = array(
             "Madeira","Gelo","Trampolim","Lava","Chocolate","Terra","Grama","Areia","Nuvem","Água","Pedra","Neve","Retângulo","Circulo","Invisível","Teia","Madeira II","Grama II","Grama III","Ácido"
           );
