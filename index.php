@@ -13,10 +13,8 @@ require_once('source/set.php');
 </head>
 <body>
   <main>
-    <svg viewBox="0 0 800 400">
+    <svg class="map-container" viewBox="0 0 800 400">
     <?php
-
-
 
 for ($i = 0; $i < $groundsNo; $i++) { 
   generateNewGround($i);
@@ -38,22 +36,16 @@ for ($i = 0; $i < $groundsNo; $i++) {
             $ii = -1;
         }
       }
-    };
+    }
   }
 
-  $grounds[$i]['type'] = random_int(0, count($typeColors) - 1);
-  if (count($typeExceptions) < count($typeColors)) {
-    generateGroundType($i);
+  generateGroundType($i);
 
-    
-    $groundColor = $typeColors[$grounds[$i]['type']];
+  $groundType = $typeColors[$grounds[$i]['type']];
 
-    echo "  <rect width='$groundWidth' height='$groundHeight' x='$groundOriginX' y='$groundOriginY' fill='$groundColor'/>
-    ";
-  } else {
-    break;
-  }
-};
+  echo "  <rect id='z-$i' width='$groundWidth' height='$groundHeight' x='$groundOriginX' y='$groundOriginY' fill='$groundType'/>
+  ";
+}
 
 echo "
 <svg class='grid' stroke='#d21a1a9f' stroke-width='.5'>";
@@ -86,22 +78,22 @@ echo "
         <div class='types-container'>
           <?php
 
-          $groundTypes = array(
+          $allGroundTypes = array(
             "Madeira","Gelo","Trampolim","Lava","Chocolate","Terra","Grama","Areia","Nuvem","Água","Pedra","Neve","Retângulo","Circulo","Invisível","Teia","Madeira II","Grama II","Grama III","Ácido"
           );
 
-          for ($i = 0; $i < count($groundTypes); $i++) {
+          for ($i = 0; $i < count($allGroundTypes); $i++) {
             if (verifyException($i) && verifyException($i) != verifyDisable($i)) {
               echo "<input type='checkbox' name='e-$i' id='e-$i' checked>
-              <label class='ground-btn' for='e-$i'>{$groundTypes[$i]}</label>
+              <label class='ground-btn' for='e-$i'>{$allGroundTypes[$i]}</label>
               ";
             } else if (verifyDisable($i)) {
               echo "<input type='checkbox' name='e-$i' id='e-$i'>
-              <label class='ground-btn disable' for='e-$i'>{$groundTypes[$i]}</label>
+              <label class='ground-btn disable' for='e-$i'>{$allGroundTypes[$i]}</label>
               ";
             } else {
               echo "<input type='checkbox' name='e-$i' id='e-$i'>
-              <label class='ground-btn' for='e-$i'>{$groundTypes[$i]}</label>
+              <label class='ground-btn' for='e-$i'>{$allGroundTypes[$i]}</label>
               ";
             }
           }
@@ -138,6 +130,9 @@ echo "
       </div>
     </form>
   </div>
+  <code class="display-xml">
+    <?php require_once('generatexml.php'); ?>
+  </code>
 </main>
 </body>
 </html>

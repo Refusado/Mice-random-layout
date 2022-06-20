@@ -33,6 +33,8 @@ function generateGroundType($id) {
   global $typeColors;
   global $typeDisable;
   global $grounds;
+  
+  $grounds[$id]['type'] = random_int(0, count($typeColors) - 1);
 
   for ($ii = 0; $ii < count($typeExceptions); $ii++) { 
     if ($grounds[$id]['type'] == $typeExceptions[$ii]) {

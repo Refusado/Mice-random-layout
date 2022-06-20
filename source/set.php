@@ -1,5 +1,5 @@
 <?php
-$proportionMult = 50; // OPÇÕES = 200, 100, 80, 50, 40, 25, 20, 16, 10, 8, 5, 4, 2, 1
+$proportionMult = 40; // OPÇÕES = 200, 100, 80, 50, 40, 25, 20, 16, 10, 8, 5, 4, 2, 1
 $maxGroundWidth = 200;
 $maxGroundHeight = 200;
 $firstGroundsNo = 8; // QUANDO NÃO CONFIGURADO PELO USUÁRIO
@@ -24,4 +24,8 @@ if (@$_POST['edited']) {
   $_SESSION['lastExceptions'] = $typeExceptions;
 } else {
   $typeExceptions = $_SESSION['lastExceptions'] ?? $firstTypeExceptions;
+}
+
+if (count($typeExceptions) >= count($typeColors) - count($typeDisable)) {
+  $typeExceptions = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19);
 }
