@@ -1,12 +1,12 @@
 <?php
 session_start();
-require_once('source/functions.php');
-require_once('source/set.php');
+require_once('source.php');
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/x-icon" href="./images/settings-icon.svg">
   <title>Layout Generator - TFM maps</title>
   <link rel="stylesheet" href="style.css">
@@ -15,7 +15,7 @@ require_once('source/set.php');
   <main>
     <svg class="map-container" viewBox="0 0 800 400">
     <?php
-
+// GERA PISOS A PARTIR DA QUANTIDADE DEFINIDA E VERIFICA ONDE HÁ ESPAÇO LIVRE
 for ($i = 0; $i < $groundsNo; $i++) { 
   generateNewGround($i);
   if ($i > 0) {
@@ -43,22 +43,30 @@ for ($i = 0; $i < $groundsNo; $i++) {
 
   $groundType = $typeColors[$grounds[$i]['type']];
 
+  // IMPRIME O PISO NA TELA COM AS ESPECIFICAÇÕES
   echo "  <rect id='z-$i' width='$groundWidth' height='$groundHeight' x='$groundOriginX' y='$groundOriginY' fill='$groundType'/>
   ";
 }
-
-echo "
-<svg class='grid' stroke='#d21a1a9f' stroke-width='.5'>";
-for ($i = 1; $i < 800 / $proportionMult; $i++) {
-  $p = $proportionMult * $i;
-  echo "<line x1='$p' x2='$p' y1='0' y2='400'/>";
+// VERIFICA SE O GRID FOI CONFIGURADO PARA APARECER E IMPRIME AS TAGS DO GRID SE VERDADEIRO
+if ($showGrid) {
+  echo "
+  <svg class='grid'>";
+  for ($i = 1; $i < 800 / $proportionMult; $i++) {
+    $p = $proportionMult * $i;
+    echo "<line x1='$p' x2='$p' y1='0' y2='400'/>";
+  }
+  for ($i = 1; $i < 400 / $proportionMult; $i++) {
+    $p = $proportionMult * $i;
+    echo "<line x1='0' x2='800' y1='$p' y2='$p'/>";
+  }
+  echo "
+  </svg>";
 }
-for ($i = 1; $i < 400 / $proportionMult; $i++) {
-  $p = $proportionMult * $i;
-  echo "<line x1='0' x2='800' y1='$p' y2='$p'/>";
+// VERIFICA SE A BARRA DE INFORMAÇÕES FOI CONFIGURADA PARA APARECER E IMPRIME A TAG SE VERDADEIRO
+if ($showInfoBar) {
+  echo '<rect style="border-radius: 7px;" width="800" height="22" x="0" y="0" fill="#324650"></rect>
+  ';
 }
-echo "
-</svg>";
 ?>
 </svg>
   <div class="s">
@@ -77,12 +85,9 @@ echo "
         <input type="hidden" name="edited" value="true">
         <div class='types-container'>
           <?php
-
-          $allGroundTypes = array(
-            "Madeira","Gelo","Trampolim","Lava","Chocolate","Terra","Grama","Areia","Nuvem","Água","Pedra","Neve","Retângulo","Circulo","Invisível","Teia","Madeira II","Grama II","Grama III","Ácido"
-          );
-
+          // IMPRIME TODOS OS PISOS DISPONÍVEIS COMO INPUT CHECKBOX
           for ($i = 0; $i < count($allGroundTypes); $i++) {
+            // VERIFICA O ESTADO DE CADA OPÇÃO DE PISO E IMPRIME A TAG CONFIGURADA DE CADA ESTADO
             if (verifyException($i) && verifyException($i) != verifyDisable($i)) {
               echo "<input type='checkbox' name='e-$i' id='e-$i' checked>
               <label class='ground-btn' for='e-$i'>{$allGroundTypes[$i]}</label>
@@ -104,6 +109,7 @@ echo "
           <div class='grounds-no-container'>
             <p style="text-align: center;">Pisos</p>
             <?php
+            // IMPRIME A CONFIGURAÇÃO DE QUANTOS PISOS DEVERÃO SER GERADOS E ARMAZENA A RESPOSTA DO USUÁRIO
             echo "
             <input type='range' name='grounds-number' id='grounds-number' step='1' value='$groundsNo' min='1' max='10'>
             <div class='steps-line'>";
@@ -129,10 +135,8 @@ echo "
         </div>
       </div>
     </form>
+    <code class="display-xml"><?php require_once('generatexml.php'); ?></code>
   </div>
-  <code class="display-xml">
-    <?php require_once('generatexml.php'); ?>
-  </code>
 </main>
 </body>
 </html>

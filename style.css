@@ -34,23 +34,37 @@ rect {
   height: 200px;
   background-color: #324650;
   border-radius: 10px;;
-  box-shadow: inset 0 -160px 220px -250px #0000009d;
+  /* box-shadow: inset 0 -160px 220px -250px #0000009d; */
   margin: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  overflow: hidden;
+}
+.display-xml {
+  text-align: center;
+  color: #ced2d5;
+  background-color: #2b3e47;
+  user-select: text;
+  padding: 8px;
+  margin: 4px;
+  border-radius: 7px;
+  overflow: scroll;
+  max-width: 592px;
+  max-height: 192px;
 }
 
 .btns-container {
-  width: 100%;
-  height: 200px;
+  width: 200px;
   display: flex;
   justify-content: center;
-  align-items: center;
-  gap: 20px;
+  gap: 4px;
 }
 .btn {
-  display: block;
-  padding: 4px;
-  width: 40px;
-  height: 40px;
+  display: inline-block;
+  padding: 6px;
+  width: 44px;
+  height: 44px;
   cursor: pointer;
   transition: 150ms;
 }
@@ -68,7 +82,10 @@ rect {
   display: none;
 }
 
+
+
 #map-settings {
+  border-radius: 7px;
   background-color: #324650;
   position: absolute;
   width: 636px;
@@ -142,6 +159,11 @@ rect {
   outline: none;
   cursor: pointer;
 }
+
+.grid {
+  stroke: #d21a1a9f;
+  stroke-width: .3;
+}
 .steps-line, .steps-number {
   display: flex;
   justify-content: space-between;
@@ -159,13 +181,6 @@ rect {
   width: 0px;
   display: flex;
   justify-content: center;
-}
-.display-xml {
-  user-select: text;
-  position: absolute;
-  top: calc(50vh + 300px);
-  left: calc(50vw - 400px);
-  width: 800px;
 }
 
 .disclaimer {
